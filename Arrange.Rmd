@@ -1,0 +1,163 @@
+---
+title: "Arrange the rows in descending/ascending order "
+author: "Siddharth"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# load the library
+
+```{r}
+
+
+library(nycflights13)
+library(tidyverse)
+library(gapminder)
+
+```
+
+# check few rows of data set
+
+```{r}
+
+glimpse(gapminder)
+
+```
+
+# Arrange the countries in ascending order of life expentancy
+
+```{r}
+
+gapminder %>% 
+  arrange(lifeExp) %>%
+  view()
+
+```
+
+# Arrange the countries in descending order of life expectancy
+
+```{r}
+
+gapminder %>% 
+  arrange(desc(lifeExp))%>%
+  view()
+
+```
+
+# Arrange the countries in ascending order of life expectancy and population.
+
+```{r}
+
+gapminder %>%
+  arrange(lifeExp,pop) %>%
+  view()
+
+```
+
+# Arrange the countries in descending order of life expectancy and population.
+
+```{r}
+
+gapminder %>%
+  arrange(desc(lifeExp),desc(pop)) %>%
+  view()
+
+```
+
+# Arrange the countries in ascending order of life expectancy and descending order of population.
+
+```{r}
+gapminder %>%
+  arrange(lifeExp,desc(pop)) %>%
+  view()
+
+```
+
+# load alcohol dataset
+
+```{r}
+
+setwd("E:\\Training Modules\\Dplyr Package Videos\\Introduction to Dplyr Package\\Session 5 - Arrange Rows")
+
+drinks <- read.csv("drinks.csv",stringsAsFactors = FALSE)
+
+#drinks <- read.csv("https://raw.githubusercontent.com/siddharth-sahasrabudhe/Dplyr-Package-Videos/main/drinks.csv")
+
+
+```
+
+# check few rows of data set
+
+```{r}
+
+glimpse(drinks)
+
+```
+
+# Arrange the countries in asscending order of beer servings
+
+```{r}
+drinks %>%
+  arrange(beer_servings)%>%
+  view()
+```
+
+# Arrange the countries in asscending order of beer serving and spirit servings
+
+```{r}
+
+drinks %>% 
+  arrange(beer_servings,spirit_servings)%>%
+  view()
+
+```
+
+# Arrange the countries in descending order of wine serving and spirit servings
+
+```{r}
+drinks %>% 
+  arrange(desc(wine_servings),desc(spirit_servings))%>%
+  view()
+
+```
+
+# Arrange in ascending order with one variable, and in descending order with another
+
+```{r}
+
+drinks %>% arrange(beer_servings,desc(wine_servings))%>%
+  view()
+
+```
+
+# Order the rows with NA values
+
+```{r}
+
+flights_jan <- flights %>% 
+  filter(month==1, day==1) 
+
+sum(is.na(flights_jan))
+
+flights_jan  %>% 
+  filter(is.na(dep_delay)) %>%
+  view()
+
+
+flights_jan %>% arrange(dep_delay)%>%
+  view()
+
+  flights_jan %>% arrange(desc(arr_delay))%>%
+  view()
+
+```
+
+## Summary:
+
+-   `arrange()` function is used to sort out the rows in **ascending** order. The first argument to `arrange()` function is data-set followed by the name of the variable by which the rows are sorted out.
+
+-   `arrange(desc())` method is used to sort out the rows in **descending** order.
+
+-   If the first variable has multiple observations with the same value, the value of the second variable is used to arrange the rows.
+
+-   Rows with `NA` values are always positioned at last.
