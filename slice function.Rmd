@@ -1,0 +1,139 @@
+---
+title: "slice() function to slice the data "
+author: "Siddharth"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+The `slice( )` function, as the name suggests, slices the data set into various cross sections. It selects, removes, duplicates rows by their location. The `slice()`function has a close resemblance with `arrange()` function, but has more options to sort the rows based on its integer location.
+
+## load the library
+
+```{r}
+
+library(tidyverse)
+
+```
+
+## view the complete data set
+
+```{r}
+
+mtcars %>%
+  view()
+
+```
+
+## Print out the last row of data set
+
+```{r}
+ mtcars %>%
+  slice(n())
+
+
+```
+
+## Print out the first row of data set
+
+```{r}
+
+ mtcars %>%
+  slice(1)
+
+```
+
+## Print out the first rows based on existing order
+
+```{r}
+ mtcars %>%
+  slice_head(n=5)
+
+```
+
+## Print out the last rows based on existing order
+
+```{r}
+ mtcars %>%
+  slice_tail(n=5)
+
+```
+
+## Which are the top 10 car models as per miles per gallon?
+
+```{r}
+
+mtcars %>%
+  slice_max(mpg,n=10)
+
+```
+
+## Which are the top 5 car models as per the number of engine cylinders?
+
+```{r}
+mtcars %>%
+  slice_max(cyl,n=5)
+
+```
+
+## Which are the 10 car models with lower weight?
+
+```{r}
+
+mtcars %>%
+  slice_min(wt,n=10)
+
+```
+
+# Randomly select the observations from the data set.
+
+```{r}
+
+mtcars %>%
+  slice_sample(n=10,replace = TRUE)
+
+```
+
+## Drop first 5 observations from the data set.
+
+```{r}
+
+mtcars %>% slice(-c(1:5))
+```
+
+## Drop last 5 observations from the data set.
+
+```{r}
+
+mtcars %>%
+  slice(c(n()-5:n()))
+
+```
+
+## Select observations based on weight measure
+
+```{r}
+
+mtcars %>%
+  slice_sample(weight_by = disp,n=5)
+
+```
+
+## Select observations among the grouped variables
+
+```{r}
+mtcars %>%
+  group_by(cyl)%>%
+    slice_head(n=2)%>%
+
+
+```
+
+## Summary:
+
+-   `slice()` lets you index rows by their (integer) locations.
+
+-   `slice_head()` and `slice_tail()` select the first or last rows.
+
+-   `slice_sample()` randomly selects rows.
+
+-   `slice_min()` and `slice_max()` select rows with the smallest or largest values of a variable.
