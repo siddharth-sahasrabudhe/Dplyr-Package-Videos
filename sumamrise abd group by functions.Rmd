@@ -1,0 +1,83 @@
+---
+title: "Aggregate the data using group_by() and summrise() function"
+author: "Siddharth"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+`dplyr` package provides the `group_by()` function to
+group data based on specific variables and the `summarize()` function to calculate summary statistics for each group.
+
+## load the library
+
+```{r}
+library(tidyverse)
+
+```
+
+## load the IMDB data.
+
+```{r}
+
+Movies_data <- read.csv("IMDB Movies.csv")
+
+# Movies_data <- read.csv("https://raw.githubusercontent.com/siddharth-sahasrabudhe/Dplyr-Package-Videos/main/IMDB%20Movies.csv")
+
+```
+
+## Check few rows of the dataset
+
+```{r}
+
+ glimpse(Movies_data)
+
+
+```
+
+## Generate the summary statistics of Gross Revenue
+
+```{r}
+
+Movies_data %>% summarise(Mean_revenue = sd(Gross.Revenue),n=n())
+
+
+```
+
+## Generate the summary statistics of Gross Revenue by Genre and display top 10 Genre by Mean Revenue
+
+```{r}
+
+Movies_data %>% 
+  group_by(Genre) %>%
+  summarise(Mean_revenue = mean(Gross.Revenue),variance = sd(Gross.Revenue),n=n()) %>%
+  slice_max(Mean_revenue,n=10)
+  
+
+```
+
+## Generate the summary statistics of Gross Revenue and profit by Gennre and Country 
+
+```{r}
+
+Movies_data %>%
+  group_by(Color.B.W,Genre)%>%
+  summarise(Mean_revenue = mean(Gross.Revenue),profit = (`Gross.Revenue`-Budget) ,n=n())%>%
+  filter(profit < 0)
+
+```
+ 
+## Ungroup the data back into the original one
+
+```{r}
+
+Movies_data %>%
+    ungroup()
+
+```
+
+## Summary:
+
+-   `group_by()` converts the data set into a grouped data where operations are performed "by group". `ungroup()`        removes grouping.
+
+-   `summarise()` creates a new data frame. It returns one row for each combination of grouping variables.
+
