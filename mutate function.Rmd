@@ -1,0 +1,119 @@
+---
+title: "Create new columns in data using mutate() function"
+output: html_document
+date: "2023-09-26"
+---
+
+## load the libraries
+
+```{r}
+
+library(tidyverse)
+library(nycflights13)
+
+```
+
+## Check few rows of the data set
+
+```{r}
+
+head(flights,n=20)
+?flights
+
+```
+
+## Create a sub-set of the data
+
+```{r}
+
+flights_subset <- flights %>%
+  select(carrier,origin,dest,distance,ends_with("delay"),air_time) %>%
+  view()
+
+```
+
+## create a new variable - total_travel_time = air_time + dep_delay + arr_delay
+
+```{r}
+
+flights_subset %>%
+  mutate(total_travel_time = arr_delay + dep_delay + air_time) %>%
+  view()
+
+```
+
+## Modify the existing variable - convert distance to km
+
+```{r}
+
+flights_subset %>%
+  mutate(distance = distance*1.6) %>%
+  view()
+
+```
+
+## create more than one variable using mutate()
+
+```{r}
+flights_subset %>%
+  mutate(total_travel_time = arr_delay + dep_delay + air_time,
+         total_delay = total_travel_time - air_time) %>%
+  view()
+
+```
+
+## Display only the new columns
+
+```{r}
+flights_subset %>%
+  transmute(total_travel_time = arr_delay + dep_delay + air_time,
+         total_delay = total_travel_time - air_time) %>%
+  view()
+
+```
+
+## Using mutate() on groups
+
+```{r}
+
+flights_subset %>%
+  group_by(carrier)%>%
+  mutate(total_travel_time = arr_delay + dep_delay + air_time,
+         total_delay = total_travel_time - air_time,
+         mean_delay = mean(total_delay,na.rm=TRUE)) %>%
+  view()
+
+```
+
+## re-order the position of the new columns
+
+```{r}
+
+flights_subset %>%
+  group_by(carrier)%>%
+  mutate(total_travel_time = arr_delay + dep_delay + air_time,
+         total_delay = total_travel_time - air_time,
+         mean_delay = mean(total_delay,na.rm=TRUE),.after = carrier) %>%
+    view()
+
+```
+
+## Hide un-wanted columns
+
+```{r}
+flights_subset %>%
+  group_by(carrier)%>%
+  mutate(distance=NULL,total_travel_time = arr_delay + dep_delay + air_time,
+         total_delay = total_travel_time - air_time,
+         mean_delay = mean(total_delay,na.rm=TRUE),.after = carrier) %>%
+    view()
+
+```
+
+# Summary:
+
+-   `mutate()` creates new columns that are functions of existing variables. It can also modify and delete existing columns (by setting their value to `NULL`).
+
+-   The `mutate()` operation may yield different results on grouped data because the expressions are computed within groups.
+
+-   By default, new columns are placed on the far right. You can change the order of columns using `.before` or `.after` argument
