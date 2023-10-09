@@ -1,0 +1,108 @@
+---
+title: "Joining tables using mutating join functions"
+author: "Siddharth"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+Joining tables is incredibly useful when you have to download several data files on a common set of subjects and then aggregate them into a larger, singular data set. In dplyr package, the joining functions are known as mutating joins. There are 4 mutating joins in dplyr package:
+
+1.  `inner_join()`
+
+2.  `left_join()`
+
+3.  `right_join()`
+
+4.  `full_join()`
+
+## Load the library
+
+```{r}
+
+library(tidyverse)
+
+```
+
+## create employee table
+
+```{r}
+
+employee_table <- tibble(Employee_ID = c(12320,	11450,	10453,	23190,	15431,	14290,	18790,	11540,	15340,	9821),
+                         Employee_Name = c("Paul", "Andrew", "Samantha", "Gayatri", "Raghav", "Siddharth", "Roger", "Christine", "Julia", "Andrew")) 
+
+employee_table
+
+```
+
+## create department table
+
+```{r}
+
+employee_department <- tibble(Employee_ID = c(12320,	11450,	10453,	23190,	15431,	14290,	18790),
+                         Department = c("Finance", "Quality", "Operations", "Marketing", "HR", "Sales", "HR"))
+
+employee_department
+```
+
+## create course enrollment table
+
+```{r}
+
+course_enrollment <- tibble(Employee_number = c(11450,	10453,	15431,	18790),
+                         Course_enrolled = c("YES", "YES", "YES", "YES"))
+
+course_enrollment
+```
+
+## Concept of key-value pair:
+
+### The variable used to connect each pair of table is called *keys*. A key is a variable that uniquely identifies an observation.
+
+#### The observations that are attached to the key variable are called as *value.*
+
+#### In this example: *key* is Seller (common column), and Product, Amount are *values.*
+
+![](key-value%20pair.png){width="705"}
+
+| Key   | Product | Amount |
+|-------|---------|--------|
+| Adam  | Bananas | \$705  |
+| Harry | Oranges | \$605  |
+
+### All the `*_join()` functions in dplyr uses this key-value pair concept to join the tables.
+
+## Perform `inner_join()`
+
+### Only keeps the observations in Data frame 1 that have a matching key in Data frame 2. So, in `inner_join()` there may be a data loss in the resulting data frame.
+
+In other words, `inner_join()` returns all matching observations between two data frames.
+
+![](inner_join.png)
+
+```{r}
+
+employee_table %>%
+  inner_join(employee_department,join_by("Employee_ID"))
+
+```
+
+## In `inner_join()`, does the order of joining the tables matter?
+
+```{r}
+
+employee_department %>%
+  inner_join(employee_table,join_by("Employee_ID"))
+
+```
+
+Summary:
+
+-   All the `*_join()` functions in dplyr uses key-value pair concept to join the tables. The variable used to connect each pair of table is called *keys*.
+
+    The observations that are attached to key variable are called as values.
+
+-   `inner_join()` returns all matching observations between two data frames.
+
+-   The joining order of data frame in `inner_join()` does not matter
+
+## 
